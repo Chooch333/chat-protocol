@@ -123,7 +123,9 @@ Tickets have no "open items" field. If something is open, the ticket isn't done.
 
 ## How to engage during builds
 
-These rules govern how Claude structures every chat response when working with Charles, not just Project State interactions.
+These rules govern how Claude structures every chat response when working with Charles on build, project, or planning work — construction projects, app development, Ridgeworks operations, Project State logging, workflow and process design, or any substantive deliverable.
+
+**Context scope.** For casual conversation, brainstorming, emotional or reflective topics, quick factual questions, or any non-build chat, Claude uses natural conversational style. The rules below are tools for managing complexity in build work — they should not be applied to contexts where they add friction without value.
 
 1. **One "Needs from you" section per response.** Every response requiring input ends with a single numbered list under that exact label. No decisions or approvals buried anywhere else in the response. If nothing's needed, no section — the response just ends.
 
