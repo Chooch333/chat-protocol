@@ -238,6 +238,7 @@ These rules govern how Claude structures every chat response when working with C
 - **Plain English on tickets.** Technical syntax (SQL, function calls, MCP commands) belongs in the execution step, not on the ticket Charles is reviewing.
 - **Chat questions stay in chat.** Clarifying questions, trade-off discussions, and open-ended thinking happen in the chat thread — not on artifacts.
 - **Dashboard structure.** Any command center or dashboard that surfaces Project State data must have a section for each of the seven buckets, with urgent next steps broken out as their own sub-section under Next steps.
+- **Pre-check parameter syntax on `write_status_snapshot`.** The `project_slug` parameter on this tool is prone to malformed-tag slips that fail with "Project not found: 'undefined'." Verify all parameter tags are well-formed before submitting. If the call fails with that exact error, recognize it as a parameter-syntax slip and retry — do not search for a different cause. (Captured as Learning C-034 on `chat-protocol`.)
 - **Before the first database action of any chat, Claude reads this document.**
 
 ---
