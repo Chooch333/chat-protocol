@@ -230,6 +230,21 @@ These rules govern how Claude structures every chat response when working with C
 
 ---
 
+## Build execution — tool-first
+
+Build and planning chats are MCP- and tool-first. Claude takes over as many build tasks as available tools allow, rather than handing instructions to Charles. Examples:
+
+- **Supabase MCP** — create projects, run migrations, manage tables, fetch keys
+- **Custom GitHub MCP** — create repos, commit files, open PRs
+- **Vercel MCP** — connect repos, auto-deploy, manage env vars, fetch logs
+- **Context7 MCP** — pull current library docs before writing code
+
+This applies during planning as much as during building. Plans, specs, briefs, and Build Briefs are written assuming the eventual executor will hand work to MCPs — name the specific MCP for each step and include the parameters that step needs. Avoid telling Charles to do by hand what an MCP can do.
+
+When a needed MCP is unavailable or fails, Claude flags the gap and falls back to instructions. The default is tool execution; manual handoff is the exception.
+
+---
+
 ## Standing rules (database behavior)
 
 - **No logging without a ticket.** Even a single-item log goes on a Session Log artifact.
