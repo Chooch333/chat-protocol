@@ -24,7 +24,7 @@ The chat follows exactly these steps in order. Do not improvise.
 
 Charles will provide a brief in his first or second message. Treat whatever he writes as the brief content verbatim. Do not edit it, summarize it, restructure it, or "improve" it. Charles has already reasoned this through with another chat; the brief is final on arrival.
 
-The brief might be a short directive ("Should I sell my Hyundai Palisade and replace it with a used minivan?") or a multi-paragraph framing. Either is fine. Do not ask clarifying questions about the topic itself — the seven agents will interrogate it.
+The brief might be a short directive ("Should I sell the Palisade and replace it with a used minivan?") or a multi-paragraph framing. Either is fine. Do not ask clarifying questions about the topic itself — the seven agents will interrogate it.
 
 ### Step 2 — Confirm and propose a slug
 
@@ -44,7 +44,7 @@ Ask Charles to confirm or amend. **One Needs from you, recommendation included.*
 
 Once Charles confirms, proceed. Do not fire without confirmation.
 
-### Step 3 — Fire the run
+### Step 3 — Insert the brief (this auto-fires the run)
 
 Use **Supabase MCP** `execute_sql` against project `drjtbqkizrqrwajofsea` to insert the brief:
 
@@ -56,39 +56,65 @@ returning id, slug;
 
 Capture the returned `id` — this is the brief's UUID.
 
-Then trigger the orchestration. The orchestrator endpoint is:
+**That's it for the trigger.** A Postgres trigger on the `briefs` table (`briefs_fire_orchestrator`) auto-fires the orchestrator's `/api/run` endpoint via `pg_net` as soon as the row lands. The chat does NOT need to call any HTTP endpoint, paste a URL, or do anything else to fire the run. The insert IS the fire.
+
+Tell Charles the run is in flight:
+
+> Brief inserted. The seven agents are running in parallel — should take about 60 seconds. I'll watch for completion and hand you the output link as soon as it's ready.
+
+### Step 4 — Wait, then check Project State
+
+The orchestrator takes 30–90 seconds to complete. After inserting, wait, then check Project State for the auto-logged completion note.
+
+**Wait at least 45 seconds before the first check** — the orchestrator typically finishes in 45–60s, and checking earlier just burns tool calls.
+
+Use **Project State MCP** `get_project_state` to check:
 
 ```
-https://brainstorm-orchestrator.vercel.app/api/run?briefId=<UUID>&token=<RUN_TOKEN>
+get_project_state(project_slug='brainstorm-orchestrator', recent_notes_limit=5)
 ```
 
-Where `<RUN_TOKEN>` is the run token Charles set during the orchestrator's deployment. **Charles will paste this URL into his browser to fire the run** — the chat does not fire it directly. (Reason: the chat sandbox cannot reach Vercel deployment-protected URLs from outside Charles's authenticated browser session, and the orchestrator's run endpoint is currently behind that protection.)
+Look in `recent_notes` for a note where:
+- `topic` equals the slug from Step 3 (e.g. `palisade-vs-minivan`), AND
+- `tags` includes `brainstorming-run`, AND
+- `created_at` is after the time you inserted the brief
 
-Hand the URL to Charles in chat with these instructions:
+That note's `content` field has the output URL on the line starting with `Output:`.
 
-> Brief inserted. Paste this URL into your browser tab and let it run for 30–90 seconds:
->
-> ```
-> https://brainstorm-orchestrator.vercel.app/api/run?briefId=<UUID>&token=<RUN_TOKEN>
-> ```
->
-> When the JSON response loads, paste it back to me.
+If the note is not found on the first check, wait 20 more seconds and check again. Allow up to 4 polling attempts (about 2 minutes total wall time) before treating it as a failure. The orchestrator's hard ceiling is 5 minutes — but in practice runs finish well under 90 seconds, so a 2-minute window with multiple checks is generous.
 
-Wait for Charles to paste the JSON response.
+### Step 5 — Hand back the link
 
-### Step 4 — Hand back the link
-
-When the JSON response comes back, verify `successCount` equals `totalCount` (both should be 7). The response includes an `outputUrl` field — that's the rendered compiled doc. Hand it back as a single clickable line. Do not summarize the seven framings, do not characterize the outputs, do not preview anything.
+Extract the output URL from the note content and hand it to Charles as a single clickable line. Do not summarize the seven framings, do not characterize the outputs, do not preview anything.
 
 Sample response from the chat:
 
 > Done. Read the compiled brainstorm here: https://brainstorm-orchestrator.vercel.app/output/<UUID>
 >
-> A note has also been auto-logged to the Brainstorm Orchestrator project in Project State, so you can find your way back to this URL later from the dashboard.
-
-If `successCount` is less than `totalCount`, surface that — name which framings failed and their error messages from the `summary` field — and ask whether to investigate or accept partial.
+> Auto-logged to Project State as note `<display_id>` for the Brainstorm Orchestrator project.
 
 That ends the chat. The chat does not produce a Session Log, does not write to Project State directly (the orchestrator handles that), and does not invite further discussion of the topic.
+
+### Step 6 — Failure handling
+
+If the polling window expires without finding a note, something has gone wrong. Diagnose by querying the brief's status:
+
+```sql
+select status, completed_at,
+  (select count(*) from agent_outputs where brief_id = b.id) as output_count,
+  (select count(*) from agent_outputs where brief_id = b.id and status = 'complete') as complete_count,
+  (select count(*) from agent_outputs where brief_id = b.id and status = 'failed') as failed_count
+from briefs b where id = '<UUID>';
+```
+
+Possible states:
+
+- **status='complete' but no Project State note.** Orchestrator finished but couldn't reach the Project State MCP. Hand Charles the output URL directly: `https://brainstorm-orchestrator.vercel.app/output/<UUID>`. Surface the missing-note as something to investigate later.
+- **status='running'.** The run is still in flight; wait another 60 seconds and check again before declaring failure.
+- **status='pending'.** The trigger didn't fire. Check whether `pg_net` is healthy in Supabase and whether `briefs_fire_orchestrator` is still attached to the table.
+- **failed_count > 0.** Some agents errored. Hand Charles the output URL anyway (the doc shows error messages in place of failed framings) and surface which framings failed.
+
+In all failure cases: surface clearly in chat, do not retry blindly. Charles will direct.
 
 ---
 
@@ -100,11 +126,11 @@ That ends the chat. The chat does not produce a Session Log, does not write to P
 
 - **No advice.** If Charles asks for the chat's opinion on the topic mid-flow ("what do you think — should I sell the Palisade?"), redirect: that's what the seven agents are for, fire the run and read what they say.
 
-- **The Run Token is in Charles's head, not the protocol.** The skill never asks Charles to share or expose the token. Charles either remembers it or has it saved somewhere he controls. If he's lost it, he can find it in the Vercel project settings under environment variable `RUN_TOKEN`.
-
 - **The chat protocol still applies.** All the engagement rules in `PROTOCOL.md` — one Needs from you per response, every choice with a recommendation, closed-choice questions, visual separator before Needs from you — apply during the brief-confirmation step. They just have less to govern because the workflow is so short.
 
-- **Failures escalate.** If the SQL insert fails, the URL paste-back returns an error, the orchestrator response shows agent failures, or anything else goes off-script — pause and surface it in chat. Do not retry blindly. Charles will direct.
+- **No tokens or URLs in chat.** The trigger is fully automated via the Postgres trigger; Charles never needs to see, paste, or remember the run token or the run URL. The skill never asks Charles to share these.
+
+- **Failures escalate.** If the SQL insert fails, polling expires, the orchestrator response shows agent failures, or anything else goes off-script — pause and surface it in chat per Step 6. Do not retry blindly. Charles will direct.
 
 ---
 
@@ -117,8 +143,9 @@ For Claude's reference during execution. Charles does not need to read this.
 - **Vercel project ID:** `prj_ZEv509FX2ZvkzPDfXyg3rRogj6aY`
 - **Vercel team:** `team_8nMi0Bd6orQHGeTrMZYWCamm` (slug `chooch333s-projects`)
 - **Supabase project ID:** `drjtbqkizrqrwajofsea`
-- **Supabase tables:** `briefs` (insert here), `agent_outputs` (read-only from this protocol)
+- **Supabase tables:** `briefs` (insert here — trigger auto-fires the run), `agent_outputs` (read-only from this protocol), `orchestrator_config` (holds the run endpoint URL and token; do not query unless debugging)
+- **Postgres trigger:** `briefs_fire_orchestrator` on `public.briefs`, calls `public.fire_orchestrator_run()`, uses `pg_net` for async HTTP
 - **Project State project slug:** `brainstorm-orchestrator`
-- **Run endpoint:** `GET /api/run?briefId=<UUID>&token=<RUN_TOKEN>`
+- **Run endpoint (auto-fired by trigger; do not call manually):** `GET /api/run?briefId=<UUID>&token=<RUN_TOKEN>`
 - **Output endpoint:** `GET /output/<UUID>` (rendered HTML, no auth needed beyond knowing the UUID)
 - **Diagnostics (RUN_TOKEN-protected):** `/api/debug-projectstate`, `/api/test-note-log?briefId=<UUID>`
