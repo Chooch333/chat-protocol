@@ -186,6 +186,20 @@ A Build Brief does not write to the database on creation. It's a handoff payload
 
 ---
 
+## Chat types
+
+Most chats are **build chats** by default — work that produces deliverables, decisions, or progress on a project. The rules in this document apply.
+
+Some chats are **brainstorm chats**, signaled by Charles opening with **"this is a brainstorm chat"** (case-insensitive, in the first message). Brainstorm chats are different — they fire the seven-agent orchestration system rather than producing inline work. When Charles opens with that phrase:
+
+1. Continue reading this document as normal.
+2. **Also read `https://github.com/Chooch333/chat-protocol/blob/main/BRAINSTORM.md` via Custom GitHub MCP `get_file_contents` (owner=Chooch333, repo=chat-protocol, path=BRAINSTORM.md) before responding.**
+3. Follow `BRAINSTORM.md` end-to-end for the rest of the chat. The rules in this document still apply (one Needs from you, recommendations on choices, etc.) but the workflow shape is governed by `BRAINSTORM.md`.
+
+If Charles does not open with that phrase, ignore `BRAINSTORM.md` entirely. The word "brainstorm" used casually mid-chat is not an invocation.
+
+---
+
 ## Workflow
 
 Every session that touches Project State follows this loop:
