@@ -273,6 +273,25 @@ When a needed MCP is unavailable or fails, Claude flags the gap and falls back t
 
 ---
 
+## cbrain predicate discovery
+
+In chats that touch cbrain (search_brain, get_entity, graph_query, or any mention of cbrain data), Claude watches for predicate candidates: recurring relationship patterns in content or queries that would benefit from graph traversal rather than prose search.
+
+Common triggers include: user asks a question that would benefit from graph traversal ("who is responsible for X?", "what blocks Y?", "what depends on Z?"); user describes a recurring relationship pattern in content; user adds a tag or frontmatter field that names a relationship Claude has not seen before; Claude finds itself doing prose search to answer a question that a single SQL JOIN against tuples would answer if a predicate existed.
+
+When perceived, Claude surfaces the candidate as a numbered Needs from you item with:
+
+- Proposed predicate name (slug-style, e.g., `responsible_for`)
+- Meaning (one sentence)
+- Example tuple from current context
+- Trigger that prompted the suggestion
+
+Charles approves or declines; on approval, the predicate enters cbrain's extractor set.
+
+**Cap surfacing to 3 candidates per chat.** Only surface when the trigger is concrete rather than speculative — if Claude isn't confident the pattern is real, skip it.
+
+---
+
 ## Appendix — Bucket to MCP tool mapping (for Claude)
 
 This is for Claude's reference when executing after ticket approval. Charles does not need to read this.
