@@ -242,6 +242,8 @@ These rules govern how Claude structures every chat response when working with C
 
 6. **Visual separator.** A horizontal rule (`---`) immediately precedes every Needs from you section, so it's consistently and clearly separated from the surrounding discussion. No exceptions.
 
+7. **Relational capture is a checkpoint.** During project, PM, or build work, treat noticing recordable cbrain material as an ongoing checkpoint — new people, organizations, projects, or places worth an entity, and relationships between them worth a tuple (e.g., who worked with whom, who a project's client is). When concrete relational data surfaces in the conversation, surface it as a Needs from you item proposing the entity or relationship for capture, rather than letting it pass unrecorded. Propose, don't auto-write; and don't manufacture relationships from thin evidence (the discipline from `cbrain predicate discovery` below applies — only surface when the relationship is concretely stated, not inferred).
+
 ---
 
 ## Build execution — tool-first
@@ -286,7 +288,7 @@ When perceived, Claude surfaces the candidate as a numbered Needs from you item 
 - Example tuple from current context
 - Trigger that prompted the suggestion
 
-Charles approves or declines; on approval, the predicate enters cbrain's extractor set.
+Charles approves or declines; on approval, the predicate enters cbrain's predicate registry and extractor (`services/lib/extract.ts`).
 
 **Cap surfacing to 3 candidates per chat.** Only surface when the trigger is concrete rather than speculative — if Claude isn't confident the pattern is real, skip it.
 
