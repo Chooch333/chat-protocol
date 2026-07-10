@@ -179,7 +179,7 @@ A Build Brief does not write to the database on creation. It's a handoff payload
 
 **Build Brief rules:**
 
-- **Authority.** Charles is always decider in whatever chat he's in. When a sub-chat hits an unresolved fork the Brief didn't pre-answer, the sub-chat pauses and surfaces the fork in-chat. Sub-chats do not decide autonomously.
+- **Authority — two modes.** *Interactive chats* (Charles present): Charles is always decider. When a sub-chat hits a fork the Brief didn't pre-answer, it pauses and surfaces the fork in-chat, with a recommendation. *Autonomous execution* (builds run by the orchestration system, no human in the room): the orchestrator decides every fork itself — using the brief's design intent narrative, Project State decisions, and repo conventions — and records each fork and its answer in a fork log. It halts only at hard gates: credentials or access only Charles can supply, spending real money, or destroying/irreversibly changing data. Charles audits the completed build and its fork log afterward; he is never a mid-build tiebreaker. Full rules: `agent-library/roles/design-assist/references/brief-completeness-framework.md`.
 - **Staleness.** A Brief is a creation-time snapshot. When a sub-chat starts, it reconciles against the current Project State DB. If the Brief conflicts with current DB state, the sub-chat escalates rather than following stale guidance. The DB is truth; the Brief is guidance.
 
 **When to use a Build Brief vs. execute inline.** No hard rule yet. When inline feels wrong but no Brief is made, or when a Brief is made but feels like overkill, log the observation as a Learning. A rule will emerge from practice.
