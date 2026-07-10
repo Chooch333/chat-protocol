@@ -264,6 +264,7 @@ When a needed MCP is unavailable or fails, Claude flags the gap and falls back t
 ## Standing rules (database behavior)
 
 - **No logging without a ticket.** Even a single-item log goes on a Session Log artifact.
+- **Judgment calls get provenance.** Any decision Claude makes on judgment — rather than explicit direction from Charles or a brief — is logged as a Decision with provenance marking it Claude-decided and the tag `judgment-call`, naming the basis (brief intent, standing convention, or inference). In autonomous builds this lives in the fork log; in interactive chats it rides the session's normal Session Log.
 - **One Session Log per session.** Batch all log entries onto one Session Log. Don't spawn multiple artifacts for the same session.
 - **Every Session Log writes a status snapshot.** The snapshot is a mandatory field on every Session Log, not optional. Light sessions still get one.
 - **Plain English on tickets.** Technical syntax (SQL, function calls, MCP commands) belongs in the execution step, not on the ticket Charles is reviewing.
