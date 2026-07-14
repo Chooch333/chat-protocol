@@ -120,7 +120,7 @@ For anything that breaks — and the fix. Break and solution live on the same ti
 
 For handing off a scoped task to a sub-chat. Use when the current chat needs to spawn focused work elsewhere — a different codebase, a narrow investigation, a deliverable that belongs in its own context — rather than execute inline.
 
-A Build Brief does not write to the database on creation. It's a handoff payload: a package of context and directive that lets a sub-chat execute without re-negotiating the main chat's decisions.
+A Build Brief is both a handoff payload and a queue entry. At authoring it is committed to git and written to Project State as a plan (see Shelving a brief, below) — it does not otherwise write Decisions, Next steps, or other buckets on creation.
 
 **Template:**
 
