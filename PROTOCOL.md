@@ -177,6 +177,14 @@ A Build Brief is both a handoff payload and a queue entry. At authoring it is co
 - **Brief ID.** Auto-generated as `BB-YYYY-MM-DD-[slug]`. No need to choose.
 - **Return contract.** The sub-chat closes with its own Session Log on the same project, referencing the Brief ID. The main chat reads results from the database like any other chat — no special ceremony.
 
+**Shelving a brief (the build queue).** The shelf is Project State: **plans with status `queued`**. The orchestrator pulls the oldest queued plan on a project. Every Build Brief gets three things in the same turn it's authored:
+
+1. **Git home.** Commit the brief to the target project's repo at `docs/design/BB-YYYY-MM-DD-slug.md`. If the build has no target repo, use `chat-protocol/briefs/` instead.
+2. **Plan.** `write_plan` on the target project's Project State project. Content is the full brief text; the brief header carries the git fetch path (owner, repo, path) so any chat can find the readable copy.
+3. **Status.** When the brief passes the completeness gate and is build-ready, `update_plan_status` → `queued`. Until then it stays `draft`. Queued means on the shelf; nothing else does.
+
+Interactive handoff (pasting a prompt into a sub-chat) still works — but the pasteable prompt instructs the sub-chat to fetch the brief from its git home rather than trust pasted text. The plan is the authoritative queue entry; the git copy is the durable, human-readable one. Keep them in sync via `update_plan_content` when a brief is amended.
+
 **Build Brief rules:**
 
 - **Authority — two modes.** *Interactive chats* (Charles present): Charles is always decider. When a sub-chat hits a fork the Brief didn't pre-answer, it pauses and surfaces the fork in-chat, with a recommendation. *Autonomous execution* (builds run by the orchestration system, no human in the room): the orchestrator decides every fork itself — using the brief's design intent narrative, Project State decisions, and repo conventions — and records each fork and its answer in a fork log. It halts only at hard gates: credentials or access only Charles can supply, spending real money, or destroying/irreversibly changing data. Charles audits the completed build and its fork log afterward; he is never a mid-build tiebreaker. Full rules: `agent-library/roles/design-assist/references/brief-completeness-framework.md`.
