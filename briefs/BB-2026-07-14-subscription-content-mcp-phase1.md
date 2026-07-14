@@ -1,3 +1,12 @@
+> **Relocated 2026-07-14.** This brief's canonical git home moved to
+> `Chooch333/subscription-content-mcp/docs/design/BB-2026-07-14-subscription-content-mcp-phase1.md`
+> now that the target repo exists (this file was the `chat-protocol/briefs/`
+> fallback, used only because no target repo existed at authoring time — see
+> PROTOCOL.md's shelving canon). Left here for history; not maintained further.
+> The Project State plan (`c58865b5`, project `paywall-mcp`) points at the new location.
+
+---
+
 # Build Brief — BB-2026-07-14-subscription-content-mcp-phase1
 *Updated: 2026-07-14 · Turn 2 · BUILD-READY · shipped 2026-07-14 (Charles approved).*
 *Git home (at ship): Chooch333/chat-protocol/briefs/BB-2026-07-14-subscription-content-mcp-phase1.md (target repo created by this build; brief moves to its docs/design/ as a build step).*
@@ -128,3 +137,6 @@ Orchestrator queue (autonomous execution per PROTOCOL.md). Plan on Project State
 2. Theme synthesis → out of this brief; reasoning pipeline scoped elsewhere, gated on this MCP **[Charles, 2026-07-14]**
 3. April artifacts → proceed without; Project State record sufficient for this slice **[Charles, 2026-07-14]**
 4. Stack/parser/auth/env/politeness/ops defaults (deficiencies #1–4, #18, #23–27, #29, #31) → per Decisions in Scope **[Claude-per-doctrine — judgment-call, basis: existing MCP conventions + April decision record]**
+
+## Fork log (build-time — see the live copy at Chooch333/subscription-content-mcp/docs/design/ for entries 5+)
+This copy is frozen as of relocation. Entries 5-8 (repo-creation tooling gap, queue schema refinement, RLS judgment call, Next.js-vs-plain-Vercel-functions judgment call) are recorded only in the live copy.
