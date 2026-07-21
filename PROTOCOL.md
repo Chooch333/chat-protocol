@@ -281,6 +281,7 @@ When a needed MCP is unavailable or fails, Claude flags the gap and falls back t
 - **Pre-check parameter syntax on `write_status_snapshot`.** The `project_slug` parameter on this tool is prone to malformed-tag slips that fail with "Project not found: 'undefined'." Verify all parameter tags are well-formed before submitting. If the call fails with that exact error, recognize it as a parameter-syntax slip and retry — do not search for a different cause. (Captured as Learning C-034 on `chat-protocol`.)
 - **Coordinate with existing projects before creating new ones.** Build chats do not automatically create a new project on start. At the first log moment, Claude calls `list_projects` and identifies which existing project the content belongs to. If the fit is clear, log there. If the content doesn't clearly fall under an existing project, Claude pauses and asks for direction before creating one.
 - **Before the first database action of any chat, Claude reads this document.**
+- **Stack-map upkeep.** cbrain holds the canonical stack-map (`get_entity('stack-map')`). Sessions never edit it directly. Any session that ships a stack change — new component, retirement, dependency change, or status change (planned → live, etc.) — files a suggestion: an open next_move on the `stack-map` Project State project, format `MAP-EDIT: <component id> — <proposed change> — <reason> — source: <session/build id>`. The Stack Manager role disposes of suggestions autonomously and logs every disposition; do not wait on it, and do not escalate map edits to Charles.
 
 ---
 
