@@ -299,6 +299,8 @@ It lives in two Project State tables: `build_questions` (one row per question, w
 
 **Charles's role:** he carries the Q-NNN ID between chats (build chat surfaces it → he brings it to a DA/planning chat), and he answers directly in chat when the call is his; the chat records his answer as a `charles`-authored message. He is not the transport for the *content* — the thread holds that — only the pointer.
 
+**Always cite IDs project-qualified.** Display IDs (`Q-`, `A-`, `CB-`, `C-`, `B-`) increment **per project**, so a bare `Q-001` is ambiguous — every project has its own. When surfacing any ID to Charles or referencing one across chats, write it as `project/ID` (e.g. `agent-build-out/Q-001`, `cbrain/Q-001`, `cbrain/CB-085`). This is a citation rule, not a schema change: the underlying key is correctly unique per (project, display_id).
+
 This is the same discipline as the rest of the protocol: write it down where every chat can see it, don't make Charles the relay.
 
 ---
