@@ -285,7 +285,25 @@ When a needed MCP is unavailable or fails, Claude flags the gap and falls back t
 
 ---
 
-## cbrain predicate discovery
+## Cross-chat questions (the Q-channel)
+
+Sometimes a build chat hits a decision point it can't resolve on its own — a fork outside its authority, a $0-rule exception, a design call that belongs to Charles or to a DA/planning chat. Previously that question only lived in the build chat, and Charles had to relay it by hand. The **Q-channel** fixes that: a durable, threaded place where build chats ask and DA/planning chats answer, visible to every chat type.
+
+It lives in two Project State tables: `build_questions` (one row per question, with an auto-assigned human-facing ID `Q-NNN` per project, a one-line `title`, a `context` describing the decision point, and a `status`) and `build_question_messages` (the append-only dialogue — each turn is a new row, nothing overwritten, full history preserved).
+
+**Status lifecycle:** `open` (needs an answer) → `answered` (answered; the build chat can proceed) → `discussing` (a clarification is bouncing back and forth) → `resolved` (settled). A question links to a durable Decision (`linked_decision`) **only if** its resolution set lasting direction — this is a judgment call at resolution time, never an automatic state-flip on every reply. Dialogue stays dialogue; a decision is minted only when there's a real one to record.
+
+**When a build chat asks (build chats):** at any decision point beyond your own fork-resolution authority — anything that needs Charles's judgment, a doctrine exception, or another chat's design input — **write a question rather than guessing**. Insert a `build_questions` row (status `open`) plus an opening `build_question_messages` row (author `build`) laying out the options and your lean. Then **surface the Q-NNN ID to Charles in chat** as a Needs-from-you item ("blocked on Q-014 — need a call before I proceed"). Do not silently stall waiting for an answer, and do not guess past it.
+
+**When a DA/planning chat answers (DA/planning chats):** **at session start, check for open questions on the project** — query `build_questions` where status is `open` or `discussing` for the current project's slug. Read the thread, then answer by appending a `build_question_messages` row (author `da` or `planning`) and moving status to `answered` — or ask a clarifying question back and set status to `discussing`. If the resolution is a durable decision, log it as a Decision and set `linked_decision`, then set status `resolved` with `resolved_at`.
+
+**Charles's role:** he carries the Q-NNN ID between chats (build chat surfaces it → he brings it to a DA/planning chat), and he answers directly in chat when the call is his; the chat records his answer as a `charles`-authored message. He is not the transport for the *content* — the thread holds that — only the pointer.
+
+This is the same discipline as the rest of the protocol: write it down where every chat can see it, don't make Charles the relay.
+
+---
+
+
 
 In chats that touch cbrain (search_brain, get_entity, graph_query, or any mention of cbrain data), Claude watches for predicate candidates: recurring relationship patterns in content or queries that would benefit from graph traversal rather than prose search.
 
