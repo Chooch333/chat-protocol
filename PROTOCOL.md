@@ -303,7 +303,7 @@ This is the same discipline as the rest of the protocol: write it down where eve
 
 ---
 
-
+## cbrain predicate discovery
 
 In chats that touch cbrain (search_brain, get_entity, graph_query, or any mention of cbrain data), Claude watches for predicate candidates: recurring relationship patterns in content or queries that would benefit from graph traversal rather than prose search.
 
