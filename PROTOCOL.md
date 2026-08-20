@@ -310,7 +310,21 @@ The Q-channel is a **build-chat instrument**. Its whole job: when a build chat e
 3. If the answer is a durable decision, log the Decision, set `linked_decision` + `resolved_decision_project`, then set status `resolved`. Do this **even when the decision lands on another project** — the link is mandatory, not optional.
 4. **Before telling Charles an open question still needs him, search for an existing decision that already answers it.** An open flag is not proof the decision is unmade — decisions can land on other projects (lesson: `cbrain/CB-101`).
 
-This is the same discipline as the rest of the protocol: write it down where every chat can see it, don't make Charles the relay.
+**Disclosures — the build-to-Charles channel (`origin='build-judgment'`).** Alongside blocking questions, the same tables carry a second, non-blocking lane: anything a build chat would otherwise tell Charles beyond "done and logged" — a judgment call made on its own authority, a loose end, an FYI — posted as a disclosure rather than relayed in a chat closeout.
+
+**The routing rule.** If a build chat is going to tell Charles anything other than "it's done and ready to log," that thing goes on this channel, not into a chat message. The build decides what counts; the channel is just the destination.
+
+**Born non-blocking.** A disclosure starts in status `noted`, origin `build-judgment`, tagged `judgment-call` — never `open`. Every "what's blocking this build" query filters `status IN ('open','discussing')`, so disclosures are invisible to it automatically; that's the entire isolation mechanism, no special-casing needed elsewhere.
+
+**Status lifecycle:** `noted` (posted, awaiting optional review) → `reviewed-agree` (a DA chat looked, concurs, done — no decision required) or `reviewed-corrected` (a DA chat disagreed and logged a correcting Decision — `linked_decision` is required, the same rule as blocking-question `resolved`).
+
+**Prefix:** a parallel per-project `-J-` series (`CBR-J-001`), independent of and never continuing the `-Q-` series.
+
+**Pull only, no push.** DA/planning chats pull the "Calls to review" inbox (`list_judgment_calls`, status `noted`) at session start, listed separately from blocking questions — nothing pushes, nothing gates. If a build hits something it genuinely can't decide, that's a blocking question (`open`), not a disclosure.
+
+**Tools:** `post_judgment_call` (build side, at brief close), `list_judgment_calls` and `dispose_judgment_call` (DA side, at session start). Scoped strictly to `origin='build-judgment'` — the blocking-question tooling and behavior above are untouched.
+
+This is the same discipline as the rest of the protocol: write it down where every chat can see it, don't make Charles the relay — for blocking questions and for disclosures alike.
 
 ---
 
