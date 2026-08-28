@@ -320,6 +320,8 @@ Alongside blocking questions, the Comms Table carries a second, non-blocking lan
 
 **The routing rule.** If a build chat is going to tell Charles anything other than "it's done and ready to log," that thing goes on the Comms Table, not into a chat message. The build decides what counts; the Comms Table is just the destination.
 
+**The closing rule.** A build chat's final chat message may only say the build is done and that everything else is on the Board. Every judgment call, loose end, follow-up, or FYI goes to the Comms Table — with a `plain_summary` and `action_needed` flag set — never into chat text.
+
 **Born non-blocking.** A disclosure starts in status `noted`, origin `build-judgment`, tagged `judgment-call` — never `open`. Every "what's blocking this build" query filters `status IN ('open','discussing')`, so disclosures are invisible to it automatically; that's the entire isolation mechanism, no special-casing needed elsewhere.
 
 **Status lifecycle:** `noted` (posted, awaiting optional review) → `reviewed-agree` (a DA chat looked, concurs, done — no decision required) or `reviewed-corrected` (a DA chat disagreed and logged a correcting Decision — `linked_decision` is required, the same rule as blocking-question `resolved`).
