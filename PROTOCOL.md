@@ -384,3 +384,7 @@ This is for Claude's reference when executing after ticket approval. Charles doe
 | Note           | `add_note`                    |
 
 For supersessions, use `supersede_decision` (decisions) or `update_plan_content` (plans). Tags go in via `add_tags` or at creation time. Always verify the project is registered with `list_projects` before logging; if not, `create_project` first.
+
+**Plans and disclosures.** `write_plan` creates a plan (Build Brief or otherwise); `update_plan_content` amends one and keeps revision history; `post_judgment_call` files a disclosure on the Comms Table at build close. All three take `plain_title`/`plain_summary` (disclosures also take `action_needed`) — set them every time per the naming rule above.
+
+**Soft enforcement only.** Labels are never mandatory at write time — writes always succeed with or without them. A plan tagged `build-brief` that lands without `plain_title`/`campaign` gets a warning line back to the writing chat — not a rejection, and not a note routed to Charles.
