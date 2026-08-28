@@ -30,6 +30,18 @@ A **session** is a unit of work within a chat that ends with a Session Log. A ch
 
 ---
 
+## Campaigns and the naming rule
+
+Campaigns are a grouping layer that sits above projects and tags — a table (`campaigns`: `slug`, `title`, `purpose`, `status` — `active`/`done`/`parked`) for organizing related plans across a project's lifetime. Plans now carry `plain_title`, `plain_summary`, `campaign_id`, `designed_in`, plus review fields (`reviewed_at`, `reviewed_by`, `review_notes` — see Reviewing a succeeded plan, below).
+
+**DA authority over campaigns.** DA/planning chats have full fluidity authority over campaigns — rename one, recategorize a plan into a different campaign, fork a new campaign out of an existing one — freely, logged as a judgment call (same provenance discipline as any other judgment call). Charles is never asked to approve a campaign change.
+
+**The naming rule.** Every chat that creates a plan or files a note writes its best-shot `plain_title` / `plain_summary` at creation — every time. There is no tool gate enforcing this; writes always succeed with or without a plain label. This is mandatory chat behavior, not a validation. If "(needs a name)" is showing on the Board, that's a chat defect — fixed by the next chat that touches the item. Charles is never the one who generates a name.
+
+**What Charles sees (naming legend).** *This paragraph is the text the dashboard displays to Charles.* Builds carry a BB filing code (e.g. `BB-2026-08-27-comms-hub-plumbing`) for chats' cross-referencing only — Charles never needs to know it or use it. The names Charles actually reads are the plain titles: `plain_title` and `plain_summary` on each plan.
+
+---
+
 ## Three ticket types — all live as artifacts
 
 **Every time Claude plans to act on the database, it produces a ticket artifact.** The artifact opens beside the chat; the chat itself stays for discussion. Conversational questions ("should we do X or Y?", "what do you think about Z?") stay in chat — they do not go on tickets.
