@@ -1,7 +1,7 @@
 # Build Brief — BB-2026-09-04-adv010-sql-fallback-standing-rule
 
 **Git home:** Chooch333/chat-protocol · `docs/design/BB-2026-09-04-adv010-sql-fallback-standing-rule.md`
-**Project State plan:** `{PLAN_ID}` on `chat-protocol`
+**Project State plan:** `7574fec7-9968-46cd-99d5-b2c6e457e4be` on `chat-protocol`
 
 **What this is:** Add one paragraph to PROTOCOL.md's "Standing rules (database behavior)" section documenting the "No approval received → direct SQL, verify with a separate SELECT" fallback, so it stops being rediscovered from scratch. Directly fulfills Stack Advisor idea ADV-010.
 
