@@ -193,6 +193,8 @@ A Build Brief is both a handoff payload and a queue entry. At authoring it is co
 **Shelving a brief (the build queue).** The shelf is Project State: **plans with status `queued`**. The orchestrator pulls the oldest queued plan on a project. Every Build Brief gets three things in the same turn it's authored:
 
 1. **Git home.** Commit the brief to the target project's repo at `docs/design/BB-YYYY-MM-DD-slug.md`. If the build has no target repo, use `chat-protocol/briefs/` instead.
+
+> **On `chat-protocol/briefs/` — historical fallback only.** This repo is the rulebook (PROTOCOL.md, BRAINSTORM.md); it is not a brief store. The `briefs/` folder holds only briefs authored before their build had a home repo, retained for provenance — several are already superseded by relocated copies in their build's own `docs/design/` (see the relocation stub pattern, e.g. `subscription-content-mcp`). Do not treat `briefs/` as the place new briefs go: a brief's home is its build's repo. A brief only lands in `briefs/` when its build genuinely has no repo, and moves out the moment one exists. Briefs *about the protocol itself* correctly live in `chat-protocol/docs/design/`, not here.
 2. **Plan.** `write_plan` on the target project's Project State project. Content is the full brief text; the brief header carries the git fetch path (owner, repo, path) so any chat can find the readable copy.
 3. **Status.** When the brief passes the completeness gate and is build-ready, `update_plan_status` → `queued`. Until then it stays `draft`. Queued means on the shelf; nothing else does.
 
