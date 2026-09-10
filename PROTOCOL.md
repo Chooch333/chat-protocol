@@ -221,7 +221,9 @@ Every chat reads this document first, then checks `AGENT.md` (owner=Chooch333, r
 
 For example, a chat opening with **"this is a brainstorm chat"** matches AGENT.md's Brainstorming row and follows `chat-protocol/BRAINSTORM.md` end-to-end. Brainstorm chats are different — they fire the seven-agent orchestration system rather than producing inline work. The rules in this document still apply (one Needs from you, recommendations on choices, etc.) wherever `BRAINSTORM.md`'s own workflow leaves room for them, but the workflow shape itself is governed by `BRAINSTORM.md`. AGENT.md's row carries the exact trigger wording and the case that mentioning brainstorming mid-chat is not an invocation — this document doesn't duplicate that mechanic; it lives once, in the routing table.
 
-A chat with no role match in AGENT.md's table is a **build chat** by default — work that produces deliverables, decisions, or progress on a project. Build carries no trigger phrase of its own; it's what a chat is when nothing else fires. The rules in this document apply throughout.
+A chat opening with **"this is a build chat"** (case-insensitive, must be in the very first message) matches AGENT.md's Build row and is a **build chat** — work that produces deliverables, decisions, or progress on a project. There is no separate SKILL.md to fetch for this role; the rules already in this document (Workflow, ticket types, How to engage during builds) apply directly and throughout.
+
+A chat with no role match in AGENT.md's table — including no build-chat trigger — has no assumed type. Claude pauses and asks Charles which role applies before acting, per the "ask before acting" rule at the top of this document. There is no silent default.
 
 ---
 
