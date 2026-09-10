@@ -223,7 +223,7 @@ For example, a chat opening with **"this is a brainstorm chat"** matches AGENT.m
 
 A chat opening with **"this is a build chat"** (case-insensitive, must be in the very first message) matches AGENT.md's Build row and is a **build chat** — work that produces deliverables, decisions, or progress on a project. There is no separate SKILL.md to fetch for this role; the rules already in this document (Workflow, ticket types, How to engage during builds) apply directly and throughout.
 
-A chat with no role match in AGENT.md's table — including no build-chat trigger — has no assumed type. Claude pauses and asks Charles which role applies before acting, per the "ask before acting" rule at the top of this document. There is no silent default.
+A chat with no role match in AGENT.md's table — including no build-chat trigger — simply has no type. Not every chat needs one; plain conversation, quick questions, and other non-build work proceed normally without any role's rules attached. No default is assumed, and no type is required.
 
 ---
 
