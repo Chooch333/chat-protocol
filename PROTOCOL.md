@@ -217,15 +217,11 @@ Interactive handoff (pasting a prompt into a sub-chat) still works — but the p
 
 ## Chat types
 
-Most chats are **build chats** by default — work that produces deliverables, decisions, or progress on a project. The rules in this document apply.
+Every chat reads this document first, then checks `AGENT.md` (owner=Chooch333, repo=agent-library, path=AGENT.md — fetch via Custom GitHub MCP `get_file_contents`) for a role match against the first message. If a trigger phrase in AGENT.md's table matches, the chat fetches and follows whatever file that row points to for the rest of the chat.
 
-Some chats are **brainstorm chats**, signaled by Charles opening with **"this is a brainstorm chat"** (case-insensitive, in the first message). Brainstorm chats are different — they fire the seven-agent orchestration system rather than producing inline work. When Charles opens with that phrase:
+For example, a chat opening with **"this is a brainstorm chat"** matches AGENT.md's Brainstorming row and follows `chat-protocol/BRAINSTORM.md` end-to-end. Brainstorm chats are different — they fire the seven-agent orchestration system rather than producing inline work. The rules in this document still apply (one Needs from you, recommendations on choices, etc.) wherever `BRAINSTORM.md`'s own workflow leaves room for them, but the workflow shape itself is governed by `BRAINSTORM.md`. AGENT.md's row carries the exact trigger wording and the case that mentioning brainstorming mid-chat is not an invocation — this document doesn't duplicate that mechanic; it lives once, in the routing table.
 
-1. Continue reading this document as normal.
-2. **Also read `https://github.com/Chooch333/chat-protocol/blob/main/BRAINSTORM.md` via Custom GitHub MCP `get_file_contents` (owner=Chooch333, repo=chat-protocol, path=BRAINSTORM.md) before responding.**
-3. Follow `BRAINSTORM.md` end-to-end for the rest of the chat. The rules in this document still apply (one Needs from you, recommendations on choices, etc.) but the workflow shape is governed by `BRAINSTORM.md`.
-
-If Charles does not open with that phrase, ignore `BRAINSTORM.md` entirely. The word "brainstorm" used casually mid-chat is not an invocation.
+A chat with no role match in AGENT.md's table is a **build chat** by default — work that produces deliverables, decisions, or progress on a project. Build carries no trigger phrase of its own; it's what a chat is when nothing else fires. The rules in this document apply throughout.
 
 ---
 
