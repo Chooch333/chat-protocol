@@ -353,6 +353,23 @@ This is the same discipline as the rest of the protocol: write it down where eve
 
 ---
 
+## The Punch List
+
+**The Punch List** is the third place work sits between sessions, alongside the build shelf (plans with status `queued`) and the Comms Table. Where the shelf holds Build Briefs and the Comms Table holds build questions and disclosures, the Punch List holds fixes to the system's own rules, skills, and stack map.
+
+**Who does what — this is firm:**
+- **Only the Inspector files.** Walking the system on a schedule, it compares Project State evidence (lessons, disclosures, failed/blocked plans, stale next moves) and the shipped stack against the canonical stack-map, and writes a Punch List item — with the exact fix drafted — for anything that clears its rubric.
+- **Only the Repairer applies.** It re-checks the live target immediately before writing, applies auto-tier items with an exact-anchor edit, and writes back the result. It never files items and never verifies its own repairs.
+- **Only the Inspector closes.** Its next walk re-reads each applied item's target to confirm the change landed and nothing else changed, then marks it `verified` (or `regressed` if not).
+
+**Statuses:** `open` → `applied` → `verified` (or `held`, `needs-brief`, `refused`, `failed`, `regressed` along the way — see `roles/inspector/SKILL.md` and `roles/repairer/SKILL.md` in `agent-library` for the full lifecycle).
+
+**Not a project, never on a project view.** The Punch List has no `project_id` and is not surfaced on the Today screen, the dashboard, or any project view — Charles reads it as a trail, not a queue. DA/planning chats pull items with status `needs-brief` at session-start intake, alongside the Comms Table's two inboxes.
+
+**Tools:** `file_punch_item`, `list_punch_items`, `add_punch_note`, `set_punch_status` (project-state-mcp).
+
+---
+
 ## cbrain predicate discovery
 
 In chats that touch cbrain (search_brain, get_entity, graph_query, or any mention of cbrain data), Claude watches for predicate candidates: recurring relationship patterns in content or queries that would benefit from graph traversal rather than prose search.
