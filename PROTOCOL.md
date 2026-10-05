@@ -192,7 +192,7 @@ A Build Brief is both a handoff payload and a queue entry. At authoring it is co
 - **Done receipt gate.** Marking a plan succeeded requires a done receipt (Session Log id + every acceptance check passed with evidence or handed off to a new plan); the database refuses otherwise.
 - **Advisor-origin closing hook.** A Build Chat executing an advisor-origin brief (its plan carries an `ADV-NNN` tag) closes by writing the **actual response** into `cbrain/docs/advisor/LEDGER.md` — what really landed, if different from the DA chat's intended response — and setting that row's status to `addressed`. This is part of "done," not a follow-up: the LEDGER response is the readable answer that lets the Stack Advisor stop inferring adoption from a `building` status. It rides the existing external-review gate above — a self-certified response is a build defect, caught the same way a self-certified review is.
 
-**Shelving a brief (the build queue).** The shelf is Project State: **plans with status `queued`**. The orchestrator pulls the oldest queued plan on a project. Every Build Brief gets three things in the same turn it's authored:
+**Shelving a brief (the build queue).** The shelf is Project State: **plans with status `queued`**. The orchestrator pulls the oldest queued plan on a project. Every Build Brief gets four things in the same turn it's authored:
 
 1. **Git home.** Commit the brief to the target project's repo at `docs/design/BB-YYYY-MM-DD-slug.md`. If the build has no target repo, use `chat-protocol/briefs/` instead.
 
