@@ -374,6 +374,16 @@ This is the same discipline as the rest of the protocol: write it down where eve
 
 ---
 
+## The Stack Repairer
+
+**Two domains, one matching pair each.** The **Rules Inspector / Rules Repairer** (`agent-library/roles/inspector`, `roles/repairer` — shown under those names on screen) look after rules, skills and the stack map, weekly, through the Punch List above. The **Stack Inspector / Stack Repairer** look after things running, daily: the Stack Inspector is the 15-minute checker (cbrain `services/api/cron/stack-status.ts`, writing `stack_status`) that finds problems and grades fixes; the Stack Repairer (`agent-library/roles/stack-repairer/SKILL.md`, a Claude Code routine at 7:00 · 12:00 · 17:00 Indianapolis) only diagnoses and fixes, logging every action in `stack_repairs`.
+
+**Stack Repairer briefs are pre-approved.** When a fix is bigger than a re-run or a one-file change, the Stack Repairer writes a short Build Brief (`**Build:** unnumbered (Stack Repairer)`, tagged `stack-repairer`) and queues it tagged Overnight itself — no "Overnight: yes or no?" question and no DA review before the build. Urgent ones (something Charles would feel today, or data piling up or being lost) may be built in the same run via `skills/orchestrate-build`. Hard gates still stop it: a key, money or an irreversible data change is logged as "needs you" and carried in the recap, never guessed past.
+
+**Charles gets one daily recap and no per-problem email.** The checker's per-problem alert emails stay off (`ALERT_EMAILS_ON = false`), and the Collector and Stack Advisor never email about failed runs. The Stack Repairer's 17:00 run sends one plain-English email — Fixed today · Queued for tonight · Last night's builds · Needs you — and nothing when there's nothing to say. (Build 27, BB-2026-10-05-stack-repairer, 2026-10-06.)
+
+---
+
 ## cbrain predicate discovery
 
 In chats that touch cbrain (search_brain, get_entity, graph_query, or any mention of cbrain data), Claude watches for predicate candidates: recurring relationship patterns in content or queries that would benefit from graph traversal rather than prose search.
